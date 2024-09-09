@@ -10,6 +10,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import Topbar from "./scenes/global/Topbar";
 import MainPage from "./scenes/mainpage/MainPage";
+import ItemsPage from "./scenes/itemspage";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -27,7 +28,7 @@ const App = () => {
             {!hideSidebarAndTopbar && <Topbar setIsSidebar={setIsSidebar} />}
             <Routes>
               <Route path="/" element={<MainPage />} />
-
+              <Route path="/home" element={<ItemsPage />} />
             </Routes>
           </main>
         </div>

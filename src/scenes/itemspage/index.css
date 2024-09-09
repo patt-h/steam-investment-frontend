@@ -1,0 +1,80 @@
+.table-container {
+    border-collapse: collapse;
+    width: 70%;
+    margin: 40px auto 20px;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: #333;
+  }
+  
+.table-container th, .table-container td {
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    text-align: center;
+    padding: 8px;
+}
+
+.add-button {
+  background-color: rgba(74, 191, 38, 0.9);
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add-button:hover {
+  background-color: rgba(74, 191, 38, 0.7);
+}
+
+.item {
+  position: relative;
+}
+
+.delete-icon {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  cursor: pointer;
+  color: rgb(233, 48, 48);
+  user-select: none;
+}
+
+.edit-icon {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  user-select: none;
+}
+
+.history-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 60px;
+  position: absolute;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  user-select: none;
+}
+
+.top-right {
+  top: -85px;
+  right: -10px; 
+}
+
+.top-left {
+  top: -85px;
+  left: -10px;
+}
+
+.bottom-right {
+  bottom: -10px;
+  right: -10px;
+}
+
+.profit, .total, .total-row {
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.total-row {
+  background-color: #555;
+}

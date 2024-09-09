@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './mainpage.css';
 
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { login } from '../../components/TokenApi';
 
 const MainPage = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -11,6 +12,22 @@ const MainPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            const data = await login({ username, password });
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                navigate('/home');
+            } else {
+                setError('Invalid credentials');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
+        }
+    };
 
     return (
         <>
@@ -26,7 +43,7 @@ const MainPage = () => {
                 </div>
 
                 <div className='wrapper'>
-                    <form /*onSubmit={handleLogin} */>
+                    <form onSubmit={handleLogin}>
                         <h1>{isRegister ? 'Register' : 'Login'}</h1>
                         {isRegister && (
                             <div className="input-box">
