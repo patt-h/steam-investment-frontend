@@ -78,3 +78,21 @@
 .total-row {
   background-color: #555;
 }
+
+.custom-tooltip {
+  color:rgba(0, 0, 0, 0.8);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); 
+}
+
+.custom-tooltip .label {
+  font-weight: bold;
+  margin: 0;
+}
+
+.custom-tooltip .intro {
+  margin: 0;
+}
