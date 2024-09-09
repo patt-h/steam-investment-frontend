@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  Routes,
+  Route,
+  useLocation
+} from "react-router-dom";
 
-function App() {
+import { useState } from "react";
+import { ColorModeContext, useMode } from "./theme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+
+import Topbar from "./scenes/global/Topbar";
+import MainPage from "./scenes/mainpage/MainPage";
+
+const App = () => {
+  const [theme, colorMode] = useMode();
+  const [isSidebar, setIsSidebar] = useState(true);
+  const location = useLocation();
+
+  const hideSidebarAndTopbar = location.pathname === '/';
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
+        <div className="app">
+          <main className="content">
+            {!hideSidebarAndTopbar && <Topbar setIsSidebar={setIsSidebar} />}
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+
+            </Routes>
+          </main>
+        </div>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
