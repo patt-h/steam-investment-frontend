@@ -4,7 +4,7 @@ import { fetchItemsData } from '../../components/ItemApi';
 import { fetchHistoryData, fetchHistoryTodayData } from '../../components/HistoryApi'; // Importuj funkcję fetchHistoryData
 import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
+import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from 'recharts';
 import Header from "../../components/Header";
 
 import { tokens } from "../../theme";
@@ -71,7 +71,7 @@ const ItemsPage = () => {
                 </div>
             ), 
         },
-        { field: "marketHashName", headerName: "Name", minWidth: 450, editable: false, cellClassName: "name-column--cell", resizable: false },
+        { field: "marketHashName", headerName: "Name", minWidth: 350, editable: false, cellClassName: "name-column--cell", resizable: false },
         { field: "quantity", headerName: "Quantity", type: "number", editable: true, resizable: false },
         { field: "price", headerName: "Bought price", type: "number", minWidth: 150, editable: true, resizable: false,
             renderCell: (params) => {
@@ -104,6 +104,9 @@ const ItemsPage = () => {
                 );
             }
         },
+
+        { field: "7change", headerName: "7d change" },
+        { field: "30change", headerName: "30d change" },
         { field: "priceChart", headerName: "Price chart", minWidth: 150, flex: 1, editable: false, resizable: false,
             renderCell: (params) => {
                 const history = historyData[params.row.itemId];
@@ -131,10 +134,16 @@ const ItemsPage = () => {
                 }));
             
                 return (
-                    <ResponsiveContainer width="100%" height={60}>
+                    <ResponsiveContainer width="100%" height={40}>
                         <LineChart data={chartData}>
                             <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} dot={false} />
                             <Tooltip content={<CustomTooltip />}/>
+                            <YAxis 
+                                domain={['dataMin', 'dataMax']}
+                                axisLine={false}
+                                tick={false}
+                                width={0}
+                            />
                         </LineChart>
                     </ResponsiveContainer>
                 );
@@ -160,11 +169,9 @@ const ItemsPage = () => {
         const fetchAllHistoryData = async () => {
             if (itemData.length > 0) {
                 try {
-                    // Pobieranie danych historycznych dla każdego itema
                     const historyPromises = itemData.map(item => fetchHistoryData(item.itemId));
                     const results = await Promise.all(historyPromises);
     
-                    // Mapowanie wyników do obiektu
                     const historyMap = results.reduce((acc, history) => {
                         history.forEach(entry => {
                             if (!acc[entry.itemId]) acc[entry.itemId] = [];
@@ -190,7 +197,6 @@ const ItemsPage = () => {
                 const itemIds = itemData.map(item => item.itemId);
                 const results = await fetchHistoryTodayData(itemIds);
 
-                // Map results to object by itemId
                 const historyTodayMap = results.reduce((acc, entry) => {
                     if (!acc[entry.itemId]) acc[entry.itemId] = [];
                     acc[entry.itemId].push(entry);
@@ -219,13 +225,13 @@ const ItemsPage = () => {
     };
 
     const currencyConversionRates = {
-        USD: 1, // Bazowa waluta
-        PLN: 3.86086, // Kurs PLN -> USD
-        EUR: 0.901781 // Kurs EUR -> USD
+        USD: 1,
+        PLN: 3.86086, // PLN -> USD
+        EUR: 0.901781 // EUR -> USD
     };
     
     const convertToUSD = (amount, currency) => {
-        const rate = currencyConversionRates[currency] || 1; // Jeżeli nie ma przelicznika, zwróć 1 (domyślnie USD)
+        const rate = currencyConversionRates[currency] || 1;
         return amount / rate;
     };
 
@@ -239,7 +245,7 @@ const ItemsPage = () => {
             const gainLose = (todayPrice * quantity) - (boughtPrice * quantity);
             total += gainLose;
         });
-        setTotalAmount(total.toFixed(2)); // Ustawienie wartości całkowitego zysku
+        setTotalAmount(total.toFixed(2));
     };
 
     return (
