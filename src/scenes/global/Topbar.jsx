@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme, Tooltip } from "@mui/material";
+import { Box, IconButton, useTheme, Tooltip, Typography} from "@mui/material";
 import { useContext } from "react";
 import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
@@ -25,9 +25,11 @@ const Topbar = () => {
     <Box display="flex" justifyContent="space-between" p={2}>
       <Box
         display="flex"
-        backgroundColor={colors.primary[400]}
         borderRadius="3px"
       >
+        <Typography variant="h2">
+          Steam Investment Helper
+        </Typography>
       </Box>
 
       <Box display="flex">

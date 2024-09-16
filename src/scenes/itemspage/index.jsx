@@ -5,6 +5,7 @@ import { fetchHistoryData, fetchHistoryTodayData } from '../../components/Histor
 import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
+import Header from "../../components/Header";
 
 import { tokens } from "../../theme";
 
@@ -65,7 +66,7 @@ const ItemsPage = () => {
                     <img
                         src={`https://api.steamapis.com/image/item/730/${params.row.marketHashName}`}
                         alt={params.row.marketHashName}
-                        style={{ width: '100%', height: '100%' }}
+                        style={{ width: '90%', height: '100%' }}
                     />
                 </div>
             ), 
@@ -203,6 +204,12 @@ const ItemsPage = () => {
         fetchAllHistoryTodayData();
     }, [itemData]);
 
+    useEffect(() => {
+        if (itemData.length > 0 && Object.keys(historyTodayData).length > 0) {
+            calculateTotalIncome();
+        }
+    }, [itemData, historyTodayData]);
+
     const formatTodayPrice = (data) => {
         if (data && data.length > 0) {
             const latestEntry = data[data.length - 1];
@@ -222,12 +229,29 @@ const ItemsPage = () => {
         return amount / rate;
     };
 
+    const calculateTotalIncome = () => {
+        let total = 0;
+        itemData.forEach((item) => {
+            const todayPrice = parseFloat(formatTodayPrice(historyTodayData[item.itemId]));
+            const quantity = parseInt(item.quantity);
+            const boughtPrice = convertToUSD(parseFloat(item.price), item.currency || "USD");
+    
+            const gainLose = (todayPrice * quantity) - (boughtPrice * quantity);
+            total += gainLose;
+        });
+        setTotalAmount(total.toFixed(2)); // Ustawienie wartości całkowitego zysku
+    };
+
     return (
         <Box m="20px">
+            <Header title="INVESTMENTS" subtitle="List of all your investments" />
             <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h3" component="div">
-                    Total income: <b>{totalAmount}</b>
-                </Typography>
+            <Typography variant="h3" component="div">
+                Total income:{" "}
+                <span style={{ color: totalAmount >= 0 ? colors.greenAccent[500] : colors.redAccent[500] }}>
+                    <b>{totalAmount} USD</b>
+                </span>
+            </Typography>
                 <Box>
                     <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{
                         backgroundColor: colors.greenAccent[600],

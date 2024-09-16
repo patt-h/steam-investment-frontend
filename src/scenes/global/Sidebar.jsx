@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme, FormControl, InputLabel, Select, MenuItem as MuiMenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -7,12 +7,13 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+import HistoryIcon from '@mui/icons-material/History';
+import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined';
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
-import PaidIcon from '@mui/icons-material/Paid';
-import SavingsIcon from '@mui/icons-material/Savings';
+import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import InfoIconOutlined from '@mui/icons-material/InfoOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
@@ -38,7 +39,6 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
   return (
@@ -61,18 +61,15 @@ const Sidebar = () => {
         },
       }}
     >
-      <ProSidebar collapsed={isCollapsed}>
+      <ProSidebar>
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
               margin: "10px 0 20px 0",
               color: colors.grey[100],
             }}
           >
-            {!isCollapsed && (
               <Box
                 display="flex"
                 justifyContent="space-between"
@@ -82,13 +79,9 @@ const Sidebar = () => {
                 <Typography variant="h3" color={colors.grey[100]}>
                   MENU
                 </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                  <MenuOutlinedIcon />
-                </IconButton>
               </Box>
-            )}
           </MenuItem>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft="10%">
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -106,43 +99,21 @@ const Sidebar = () => {
             <Item
               title="Price history"
               to="/income"
-              icon={<CallMadeIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Suggested items"
-              to="/expenses"
-              icon={<CallReceivedIcon />}
+              icon={<HistoryIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Your finances"
               to="/total"
-              icon={<PaidIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Charts
-            </Typography>
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
+              icon={<PaidOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
+              title="Suggested items"
+              to="/expenses"
+              icon={<AssistantOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -155,6 +126,13 @@ const Sidebar = () => {
               Pages
             </Typography>
             <Item
+              title="FAQ"
+              to="/faq"
+              icon={<InfoIconOutlined />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
               title="Steam Market"
               to="https://steamcommunity.com/market/"
               icon={<HelpOutlineOutlinedIcon />}
@@ -165,13 +143,6 @@ const Sidebar = () => {
               title="GitHub"
               to="https://github.com/patt-h"
               icon={<GitHubIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="About"
-              to="/about"
-              icon={<InfoIconOutlined />}
               selected={selected}
               setSelected={setSelected}
             />
