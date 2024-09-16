@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchItemsData } from '../../components/ItemApi';
+import { fetchItemsData, addItemEntry, updateItemEntry, deleteItemEntries } from '../../components/ItemApi';
 import { fetchHistoryData, fetchHistoryTodayData } from '../../components/HistoryApi'; // Importuj funkcję fetchHistoryData
-import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, FormControl, InputLabel, MenuItem, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from 'recharts';
 import Header from "../../components/Header";
+import { Delete } from '@mui/icons-material';
 
 import { tokens } from "../../theme";
 
@@ -17,15 +18,20 @@ const ItemsPage = () => {
     const [historyTodayData, setHistoryTodayData] = useState({});
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
     const [openModal, setOpenModal] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
-    const [newEntry, setNewEntry] = useState({ description: '', amount: 0, transactionDate: '', category: '' });
     const [totalAmount, setTotalAmount] = useState(0);
 
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
     const handleCloseDialog = () => setOpenDialog(false);
+
+    const [rows, setRows] = useState([
+        { marketHashName: "", price: 0, currency: "USD", quantity: 1 },
+    ]);
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
@@ -56,6 +62,61 @@ const ItemsPage = () => {
         }
     
         return null;
+    };
+
+    const handleAddItems = async () => {
+        try {
+            await addItemEntry(rows);
+            handleCloseModal();
+            window.location.reload();
+        } catch (error) {
+            console.error("Error adding items:", error);
+        }
+    };
+
+    const handleDelete = async () => {
+        setOpenDialog(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            const response = await deleteItemEntries(selectedRows);
+            setItemData(prevData => prevData.filter(row => !selectedRows.includes(row.id)));
+            setSelectedRows([]);
+            setOpenDialog(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const processRowUpdate = async (newRow, oldRow) => {
+        try {
+            await updateItemEntry(newRow);
+            setItemData((prevData) => prevData.map((row) => (row.id === newRow.id ? newRow : row)));
+            return newRow;
+        } catch (error) {
+            console.error('Error:', error);
+            setError('Failed to update entry');
+            return oldRow;
+        }
+    };
+
+    const handleRowChange = (index, field, value) => {
+        const updatedRows = [...rows];
+        updatedRows[index][field] = value;
+        setRows(updatedRows);
+    };
+
+    const handleAddRow = () => {
+        setRows([
+            ...rows,
+            { marketHashName: "", price: 0, currency: selectedCurrency, quantity: 1 }
+        ]);
+    };
+
+    const handleRemoveRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
     };
     
 
@@ -105,9 +166,25 @@ const ItemsPage = () => {
             }
         },
 
-        { field: "7change", headerName: "7d change" },
-        { field: "30change", headerName: "30d change" },
-        { field: "priceChart", headerName: "Price chart", minWidth: 150, flex: 1, editable: false, resizable: false,
+        { field: "7change", headerName: "7d change", type: "number",
+            renderCell: (params) => {
+                const history = historyData[params.row.itemId];
+                if (!history) return 'No data';
+                
+                const percentageChange = calculatePercentageChange(history, 7);
+                return percentageChange !== null ? `${percentageChange}%` : 'No data';
+            }
+        },
+        { field: "30change", headerName: "30d change", type: "number",
+            renderCell: (params) => {
+                const history = historyData[params.row.itemId];
+                if (!history) return 'No data';
+                
+                const percentageChange = calculatePercentageChange(history, 30);
+                return percentageChange !== null ? `${percentageChange}%` : 'No data';
+            } 
+        },
+        { field: "priceChart", headerName: "Price chart (last 30 days)", minWidth: 150, flex: 1, editable: false, resizable: false,
             renderCell: (params) => {
                 const history = historyData[params.row.itemId];
                 
@@ -248,6 +325,33 @@ const ItemsPage = () => {
         setTotalAmount(total.toFixed(2));
     };
 
+    const calculatePercentageChange = (history, days) => {
+        const now = new Date();
+        const targetDate = new Date();
+        targetDate.setDate(now.getDate() - days);
+    
+        const currentPrice = history[history.length - 1]?.price;
+    
+        const targetPriceData = history
+            .slice()
+            .reverse()
+            .find(entry => new Date(entry.date) <= targetDate);
+    
+        if (!targetPriceData || !currentPrice) {
+            return null;
+        }
+    
+        const targetPrice = targetPriceData.price;
+    
+        if (targetPrice === 0) {
+            return null;
+        }
+    
+        const percentageChange = ((currentPrice - targetPrice) / targetPrice) * 100;
+    
+        return percentageChange.toFixed(2);
+    };
+
     return (
         <Box m="20px">
             <Header title="INVESTMENTS" subtitle="List of all your investments" />
@@ -267,7 +371,7 @@ const ItemsPage = () => {
                     }}>
                         Add New
                     </Button>
-                    <Button variant="contained" color="primary" /* onClick={handleDelete} disabled={selectedRows.length === 0} */ sx={{
+                    <Button variant="contained" color="primary" onClick={handleDelete} disabled={selectedRows.length === 0} sx={{
                         backgroundColor: colors.redAccent[600],
                         '&:hover': {
                             backgroundColor: colors.redAccent[500],
@@ -303,12 +407,12 @@ const ItemsPage = () => {
                     rows={itemData}
                     columns={columns}
                     checkboxSelection
-                    /* onRowSelectionModelChange={(itm) => setSelectedRows(itm)}
-                    processRowUpdate={processRowUpdate} */
+                    onRowSelectionModelChange={(itm) => setSelectedRows(itm)}
+                    processRowUpdate={processRowUpdate}
                     experimentalFeatures={{ newEditingApi: true }}
                     initialState={{
                         sorting: {
-                          sortModel: [{ field: 'gainlose', sort: 'desc' }],
+                          sortModel: [{ field: 'marketHashName', sort: 'asc' }],
                         },
                     }}
                     autoHeight
@@ -321,66 +425,97 @@ const ItemsPage = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
+                    width: 600,
+                    maxHeight: '60vh',
+                    overflowY: 'auto',
                     backgroundColor: colors.primary[400],
                     border: "2px solid rgba(255, 255, 255, .2)",
                     boxShadow: 24,
                     p: 4,
                 }}>
-                    <Typography variant="h2">
-                        Add New Income
+                    <Typography variant="h2" gutterBottom>
+                        Add new items
                     </Typography>
-                    <TextField
-                        fullWidth
-                        label="Description"
-                        value={newEntry.description}
-                        onChange={(e) => setNewEntry({ ...newEntry, description: e.target.value })}
-                        margin="normal"
-                    />
-                    <TextField
-                        fullWidth
-                        label="Amount"
-                        type="number"
-                        value={newEntry.amount}
-                        onChange={(e) => setNewEntry({ ...newEntry, amount: parseFloat(e.target.value) })}
-                        margin="normal"
-                    />
-                    <TextField
-                        fullWidth
-                        label="Date"
-                        type="date"
-                        value={newEntry.transactionDate}
-                        onChange={(e) => setNewEntry({ ...newEntry, transactionDate: e.target.value })}
-                        InputLabelProps={{ shrink: true }}
-                        margin="normal"
-                    />
-                    <TextField
-                        fullWidth
-                        label="Category"
-                        value={newEntry.category}
-                        onChange={(e) => setNewEntry({ ...newEntry, category: e.target.value })}
-                        margin="normal"
-                    />
+                    
+                    {rows.map((row, index) => (
+                        <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
+                            <TextField
+                                label="Name"
+                                value={row.marketHashName}
+                                onChange={(e) => handleRowChange(index, "marketHashName", e.target.value)}
+                                margin="normal"
+                                fullWidth
+                            />
+                            <TextField
+                                label="Price"
+                                type="number"
+                                value={row.price}
+                                onChange={(e) => handleRowChange(index, "price", parseFloat(e.target.value))}
+                                margin="normal"
+                                fullWidth
+                            />
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Currency</InputLabel>
+                                <Select
+                                    value={row.currency}
+                                    onChange={(e) => {
+                                        handleRowChange(index, "currency", e.target.value);
+                                        setSelectedCurrency(e.target.value); // Set selected currency
+                                    }}
+                                    label="Currency"
+                                >
+                                    <MenuItem value="USD">USD</MenuItem>
+                                    <MenuItem value="EUR">EUR</MenuItem>
+                                    <MenuItem value="PLN">PLN</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField
+                                label="Quantity"
+                                type="number"
+                                value={row.quantity}
+                                onChange={(e) => handleRowChange(index, "quantity", parseInt(e.target.value))}
+                                margin="normal"
+                                fullWidth
+                            />
+                            <IconButton onClick={() => handleRemoveRow(index)} sx={{ marginTop: "8px" }}>
+                                <Delete />
+                            </IconButton>
+                        </Box>
+                    ))}
+
+                    <Button variant="contained" color="primary" onClick={handleAddRow} sx={{
+                        backgroundColor: colors.blueAccent[700],
+                        marginBottom: "16px",
+                        '&:hover': {
+                            backgroundColor: colors.blueAccent[500],
+                        }
+                    }}>
+                        Add More Items
+                    </Button>
+
+
                     <Box sx={{
-                        marginTop: "15px"
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        marginTop: "15px" 
                     }}>
-                    <Button variant="contained" color="primary" onClick={handleCloseModal} sx={{
-                        backgroundColor: colors.redAccent[700],
-                        '&:hover': {
-                            backgroundColor: colors.redAccent[600],
-                        }
-                    }}>
-                        Cancel
-                    </Button>
-                    <Button variant="contained" color="primary" /* onClick={handleAddEntry} */ sx={{
-                        backgroundColor: colors.greenAccent[700],
-                        marginLeft: "10px",
-                        '&:hover': {
-                            backgroundColor: colors.greenAccent[500],
-                        }
-                    }}>
-                        Add
-                    </Button>
+                        <Button variant="contained" color="primary" onClick={handleCloseModal} sx={{
+                            backgroundColor: colors.redAccent[700],
+                            '&:hover': {
+                                backgroundColor: colors.redAccent[600],
+                            }
+                        }}>
+                            Cancel
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={handleAddItems} sx={{
+                            backgroundColor: colors.greenAccent[700],
+                            marginLeft: "10px",
+                            '&:hover': {
+                                backgroundColor: colors.greenAccent[500],
+                            }
+                        }}>
+                            Add
+                        </Button>
                     </Box>
                 </Box>
             </Modal>
@@ -400,7 +535,7 @@ const ItemsPage = () => {
                     }}>
                         Cancel
                     </Button>
-                    <Button /* onClick={confirmDelete} */ color="primary" sx={{
+                    <Button onClick={confirmDelete} color="primary" sx={{
                         backgroundColor: colors.redAccent[500],
                         '&:hover': {
                             backgroundColor: colors.redAccent[400],
