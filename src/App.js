@@ -9,6 +9,7 @@ import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import Topbar from "./scenes/global/Topbar";
+import Sidebar from "./scenes/global/Sidebar";
 import MainPage from "./scenes/mainpage/MainPage";
 import ItemsPage from "./scenes/itemspage";
 
@@ -24,6 +25,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
       <CssBaseline />
         <div className="app">
+        {!hideSidebarAndTopbar && <Sidebar isSidebar={isSidebar} />}
           <main className="content">
             {!hideSidebarAndTopbar && <Topbar setIsSidebar={setIsSidebar} />}
             <Routes>
