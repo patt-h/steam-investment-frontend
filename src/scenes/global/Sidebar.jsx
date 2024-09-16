@@ -93,21 +93,21 @@ const Sidebar = () => {
             />
             <Item
               title="Price history"
-              to="/income"
+              to="/history"
               icon={<HistoryIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Your finances"
-              to="/total"
+              to="/finances"
               icon={<PaidOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Suggested items"
-              to="/expenses"
+              to="/suggested"
               icon={<AssistantOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

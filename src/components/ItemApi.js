@@ -27,6 +27,7 @@ export const addItemEntry = async (entry) => {
         },
         body: JSON.stringify(entry),
     });
+    console.log('Value to be sent:', entry);
 
     if (!response.ok) {
         throw new Error('Failed to add entry');

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchItemsData, addItemEntry, updateItemEntry, deleteItemEntries } from '../../components/ItemApi';
-import { fetchHistoryData, fetchHistoryTodayData } from '../../components/HistoryApi'; // Importuj funkcję fetchHistoryData
+import { fetchHistoryData, fetchHistoryTodayData } from '../../components/HistoryApi';
+import AutoCompleteInput from '../../components/AutoCompleteInput';
 import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, FormControl, InputLabel, MenuItem, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from 'recharts';
@@ -103,7 +104,7 @@ const ItemsPage = () => {
 
     const handleRowChange = (index, field, value) => {
         const updatedRows = [...rows];
-        updatedRows[index][field] = value;
+        updatedRows[index] = { ...updatedRows[index], [field]: value };
         setRows(updatedRows);
     };
 
@@ -134,7 +135,7 @@ const ItemsPage = () => {
         },
         { field: "marketHashName", headerName: "Name", minWidth: 350, editable: false, cellClassName: "name-column--cell", resizable: false },
         { field: "quantity", headerName: "Quantity", type: "number", editable: true, resizable: false },
-        { field: "price", headerName: "Bought price", type: "number", minWidth: 150, editable: true, resizable: false,
+        { field: "price", headerName: "Purchase price", type: "number", minWidth: 150, editable: true, resizable: false,
             renderCell: (params) => {
                 const amount = params.value;
                 const currency = params.row.currency || "USD";
@@ -357,7 +358,7 @@ const ItemsPage = () => {
             <Header title="INVESTMENTS" subtitle="List of all your investments" />
             <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h3" component="div">
-                Total income:{" "}
+                Total profit:{" "}
                 <span style={{ color: totalAmount >= 0 ? colors.greenAccent[500] : colors.redAccent[500] }}>
                     <b>{totalAmount} USD</b>
                 </span>
@@ -415,7 +416,6 @@ const ItemsPage = () => {
                           sortModel: [{ field: 'marketHashName', sort: 'asc' }],
                         },
                     }}
-                    autoHeight
                     
                 />
             </Box>
@@ -425,7 +425,7 @@ const ItemsPage = () => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 600,
+                    width: 900,
                     maxHeight: '60vh',
                     overflowY: 'auto',
                     backgroundColor: colors.primary[400],
@@ -439,12 +439,9 @@ const ItemsPage = () => {
                     
                     {rows.map((row, index) => (
                         <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
-                            <TextField
-                                label="Name"
+                            <AutoCompleteInput
                                 value={row.marketHashName}
-                                onChange={(e) => handleRowChange(index, "marketHashName", e.target.value)}
-                                margin="normal"
-                                fullWidth
+                                onChange={(newValue) => handleRowChange(index, "marketHashName", newValue)}
                             />
                             <TextField
                                 label="Price"
