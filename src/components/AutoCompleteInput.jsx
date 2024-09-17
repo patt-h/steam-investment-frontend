@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Autocomplete } from '@mui/material';
-import { fetchItems } from './ItemListApi'; // Importuj funkcję fetchItemList
+import { fetchItems } from './ItemListApi';
 
 const AutoCompleteInput = ({ value, onChange }) => {
     const [options, setOptions] = useState([]);

@@ -3,21 +3,20 @@ import { Box, Typography, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import AutoCompleteInput from "../../components/AutoCompleteInput";
 import { fetchItemsData } from "../../components/ItemApi";
-
+import { useNavigate } from "react-router-dom";
 import { tokens } from "../../theme";
 
 const PriceHistory = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-
     const [items, setItems] = useState([]);
-    const [searchItem, setSearchItem] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await fetchItemsData();
-                setItems(data); // Ustawienie pobranych przedmiotów
+                setItems(data);
             } catch (error) {
                 console.error("Failed to fetch items data", error);
             }
@@ -27,26 +26,28 @@ const PriceHistory = () => {
     }, []);
 
     const handleItemClick = (item) => {
-        console.log(`Clicked item: ${item.marketHashName}`);
-        // Tutaj można dodać logikę przekierowania lub innej akcji po kliknięciu w box
+        navigate(`/history/${item.marketHashName}`);
+    };
+
+    const handleAutocompleteClick = (item) => {
+        navigate(`/history/${item}`);
     };
 
     return (
         <Box m="20px">
             <Header title="PRICE HISTORY" subtitle="Check price line chart of item" />
             
-            {/* Wyszukiwarka do dodawania nowych przedmiotów */}
             <Box mt="20px">
                 <Typography variant="h4">
                     Search for item:
                 </Typography>
                 <Box sx={{ width: '400px' }}>
-                    <AutoCompleteInput value={searchItem} onChange={setSearchItem} />
+                    <AutoCompleteInput onChange={(newValue) => handleAutocompleteClick(newValue)}/>
                 </Box>
             </Box>
 
             <Typography variant="h4" mt="10px" mb="10px">
-                    Or check price history of your items:
+                Or check price history of your items:
             </Typography>
 
             <Box
@@ -83,10 +84,10 @@ const PriceHistory = () => {
                                 marginBottom: '8px',
                             }}
                         >
-                        <img
-                        src={`https://api.steamapis.com/image/item/730/${item.marketHashName}`}
-                        style={{ width: '100%', height: '100%' }}
-                        />
+                            <img
+                                src={`https://api.steamapis.com/image/item/730/${item.marketHashName}`}
+                                style={{ width: '100%', height: '100%' }}
+                            />
                         </Box>
 
                         <Typography variant="body2">
