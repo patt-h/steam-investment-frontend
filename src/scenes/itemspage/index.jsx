@@ -48,7 +48,7 @@ const ItemsPage = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
-                    width: '85px',
+                    width: '100px',
                     fontSize: '0.75rem',
                     lineHeight: '1.2'
                 }}>

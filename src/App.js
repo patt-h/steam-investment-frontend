@@ -12,6 +12,7 @@ import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import MainPage from "./scenes/mainpage/MainPage";
 import ItemsPage from "./scenes/itemspage";
+import PriceHistory from "./scenes/pricehistory";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -31,6 +32,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/home" element={<ItemsPage />} />
+              <Route path="/history" element={<PriceHistory />} />
             </Routes>
           </main>
         </div>
