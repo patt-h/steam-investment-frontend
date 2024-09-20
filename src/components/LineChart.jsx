@@ -4,22 +4,26 @@ import { fetchHistoryDataByName } from './HistoryApi';
 import { tokens } from "../theme";
 import { useTheme } from "@mui/material";
 
-const LineChart = ({ name }) => {
+const LineChart = ({ name, data: propData, isDashboard = false }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await fetchHistoryDataByName(name);
-            if (result.length > 0) {
-                const formattedData = formatData(result);
-                setData(formattedData);
-            }
-        };
+      if (propData) {
+          setData(propData);
+      } else if (name) {
+          const fetchData = async () => {
+              const result = await fetchHistoryDataByName(name);
+              if (result.length > 0) {
+                  const formattedData = formatData(result);
+                  setData(formattedData);
+              }
+          };
 
-        fetchData();
-    }, [name]);
+          fetchData();
+      }
+    }, [name, propData]);
 
     const formatData = (data) => {
         const groupedData = data.reduce((acc, curr) => {
@@ -107,13 +111,13 @@ const LineChart = ({ name }) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'Price',
+                legend: isDashboard ? 'Profit' : 'Price',
                 legendOffset: -40,
                 legendPosition: 'middle'
             }}
             enablePoints={false}
             enableGridX={false}
-            enableGridY={true}
+            enableGridY={isDashboard ? false : true}
             colors={{ datum: 'color' }}
             curve="monotoneX"
             lineWidth={2}
@@ -125,7 +129,7 @@ const LineChart = ({ name }) => {
             sliceTooltip={({ slice }) => (
                 <div>
                     <strong>Date:</strong> {slice.points[0].data.xFormatted}<br />
-                    <strong>Price:</strong> {slice.points[0].data.yFormatted}
+                    <strong>{isDashboard ? 'Profit:' : 'Price:'}</strong> {slice.points[0].data.yFormatted} USD
                 </div>
             )}
             legends={[
