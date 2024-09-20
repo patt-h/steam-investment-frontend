@@ -14,6 +14,7 @@ import MainPage from "./scenes/mainpage/MainPage";
 import ItemsPage from "./scenes/itemspage";
 import PriceHistory from "./scenes/pricehistory";
 import ItemHistoryPage from "./scenes/chartpage";
+import FinancesPage from "./scenes/financespage";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/home" element={<ItemsPage />} />
               <Route path="/history" element={<PriceHistory />} />
               <Route path="/history/:marketHashName"  element={<ItemHistoryPage />} />
+              <Route path="/finances" element={<FinancesPage />} /> 
             </Routes>
           </main>
         </div>
