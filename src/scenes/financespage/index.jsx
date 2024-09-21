@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, useTheme, Typography } from "@mui/material";
-import { ReferenceLine } from 'recharts';
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
+import BarChart from '../../components/BarChart';
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 
@@ -47,7 +47,7 @@ const FinancesPage = () => {
             const dateCountMap = new Map();
     
             for (const item of items) {
-                const { marketHashName, quantity, price: purchasePrice, currency } = item;
+                const { id, marketHashName, quantity, price: purchasePrice, currency } = item;
                 const history = await fetchHistoryDataByName(marketHashName);
                 const boughtPriceInUSD = convertToUSD(parseFloat(purchasePrice), currency || "USD");
                 totalSpentAmount += (boughtPriceInUSD * quantity);
@@ -69,7 +69,7 @@ const FinancesPage = () => {
                     }
 
                     if (date === new Date().toLocaleDateString('fr-CA')) {
-                        itemProfits.push({ marketHashName, profit });
+                        itemProfits.push({ id, marketHashName, profit });
                     }
                 });
             }
@@ -248,9 +248,7 @@ const FinancesPage = () => {
                         </Box>
                     </Box>
                     <Box height="250px" mt="-10px">
-                        <LineChart data={profitData} isDashboard='true'>
-                            <ReferenceLine y={totalSpent} label="Total Spent" stroke="red" strokeDasharray="3 3" />
-                        </LineChart>
+                        <LineChart data={profitData} isDashboard='true' />
                     </Box>
                 </Box>
                 <Box
@@ -327,8 +325,8 @@ const FinancesPage = () => {
                                 src={`https://api.steamapis.com/image/item/730/★%20M9%20Bayonet%20%7C%20Slaughter%20(Factory%20New)`}
                                 style={{ width: '70%', height: '70%', objectFit: 'cover' }}
                             />
-                            <Typography variant="h6" fontWeight="600" color={colors.grey[100]} mt={1}>
-                                Nazwa przedmiotu
+                            <Typography variant="h6" fontWeight="600" color={colors.grey[100]} mt={1} maxWidth="200px" textAlign="center">
+                                ★ M9 Bayonet | Slaughter (Factory New)
                             </Typography>
                         </Box>
                         <Box 
@@ -359,12 +357,12 @@ const FinancesPage = () => {
                     >
                         <Box>
                             <Typography variant="h5" fontWeight="600" color={colors.grey[100]}>
-                                Bar Chart
+                                Bar Chart (average profit last year)
                             </Typography>
                         </Box>
                     </Box>
                     <Box height="250px" mt="-10px">
-                        Tu barchart
+                        <BarChart data={profitData} />
                     </Box>
                 </Box>
 
