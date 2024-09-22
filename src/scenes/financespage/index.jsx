@@ -11,7 +11,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 
 import { fetchItemsData } from "../../components/ItemApi";
-import { fetchHistoryDataByName } from '../../components/HistoryApi';
+import { fetchHistoryDataByName, fetchCurrentPrice } from '../../components/HistoryApi';
+import { fetchUserSettings } from '../../components/SettingsApi';
 
 import { tokens } from "../../theme";
 
@@ -26,6 +27,8 @@ const FinancesPage = () => {
     const [profitChangePercentage, setProfitChangePercentage] = useState(0);
     const [highestProfit, setHighestProfit] = useState(0);
     const [highestProfitDate, setHighestProfitDate] = useState(null);
+    const [userGoal, setUserGoal] = useState();
+    const [userGoalPrice, setUserGoalPrice] = useState();
 
     const currencyConversionRates = {
         USD: 1,
@@ -37,6 +40,63 @@ const FinancesPage = () => {
         const rate = currencyConversionRates[currency] || 1;
         return amount / rate;
     };
+
+    useEffect(() => {
+        const fetchItemPrice = async (goalName) => {
+            try {
+                const response = await fetchCurrentPrice(goalName);
+                console.log("Fetching from Steam")
+                
+                if (response && response.price) {
+                    return response.price;
+                } else {
+                    console.error('Error fetching price from Steam:', response);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching price from Steam:', error);
+                return null;
+            }
+        };
+
+        const updateUserGoalPrice = (userGoalPrice, userGoalName) => {
+            const today = new Date().toLocaleDateString('fr-CA');
+            const goalKey = `goal_${userGoalName}_${today}`;
+
+            localStorage.setItem(goalKey, userGoalPrice);
+            setUserGoalPrice(userGoalPrice);
+        }
+
+        const getUserSettings = async () => {
+            try {
+                const data = await fetchUserSettings();
+                setUserGoal(data.goalName);
+
+                const today = new Date().toLocaleDateString('fr-CA');
+                const goalKey = `goal_${data.goalName}_${today}`;
+                const storedPrice = localStorage.getItem(goalKey);
+
+                for (const key in localStorage) {
+                    if (key.startsWith('goal_') && key !== goalKey) {
+                        localStorage.removeItem(key);
+                    }
+                }
+
+                if (storedPrice) {
+                    setUserGoalPrice(storedPrice);
+                } else {
+                    const userGoalPrice = await fetchItemPrice(userGoal);
+                    if (userGoalPrice) {
+                        updateUserGoalPrice(userGoalPrice, userGoal);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user settings:', error);
+            }
+        };
+
+        getUserSettings();
+    }, []);
 
     useEffect(() => {
         const calculateProfit = async () => {
@@ -80,6 +140,8 @@ const FinancesPage = () => {
                 x: new Date(date),
                 y: profit,
             }));
+
+
     
             setProfitData([{ id: "Total Profit", color: 'hsl(206, 70%, 50%)', data: validProfitData }]);
 
@@ -142,7 +204,7 @@ const FinancesPage = () => {
                                     fontWeight="bold"
                                     sx={{ color: colors.grey[100] }}
                                 >
-                                    Total money spent on items
+                                    Total amount spent on items
                                 </Typography>
                             </Box>
                             <Box>
@@ -171,7 +233,7 @@ const FinancesPage = () => {
                                     fontWeight="bold"
                                     sx={{ color: colors.grey[100] }}
                                 >
-                                    Total profit
+                                    Value of your items
                                 </Typography>
                             </Box>
                             <Box>
@@ -180,7 +242,7 @@ const FinancesPage = () => {
                         </Box>
                         <Box display="flex" justifyContent="space-between" mt="2px">
                             <Typography variant="h5" sx={{ color: colors.greenAccent[500] }}>
-                                {totalProfitToday.toFixed(2)} USD
+                                {(totalProfitToday + totalSpent) .toFixed(2)} USD
                             </Typography>
                         </Box>
                     </Box>
@@ -243,7 +305,7 @@ const FinancesPage = () => {
                     >
                         <Box>
                             <Typography variant="h5" fontWeight="600" color={colors.grey[100]}>
-                                Line Chart
+                                Profit Chart
                             </Typography>
                         </Box>
                     </Box>
@@ -322,11 +384,11 @@ const FinancesPage = () => {
                             mr={1}
                         >
                             <img
-                                src={`https://api.steamapis.com/image/item/730/★%20M9%20Bayonet%20%7C%20Slaughter%20(Factory%20New)`}
+                                src={`https://api.steamapis.com/image/item/730/${userGoal}`}
                                 style={{ width: '70%', height: '70%', objectFit: 'cover' }}
                             />
-                            <Typography variant="h6" fontWeight="600" color={colors.grey[100]} mt={1} maxWidth="200px" textAlign="center">
-                                ★ M9 Bayonet | Slaughter (Factory New)
+                            <Typography variant="h6" fontWeight="600" color={colors.grey[100]} mt={1} maxWidth="70%" textAlign="center">
+                                {userGoal}
                             </Typography>
                         </Box>
                         <Box 
@@ -336,9 +398,9 @@ const FinancesPage = () => {
                             flex={1}
                             ml={1}
                         >
-                            <ProgressCircle size="125" progress={0.5} showPercentage={true} />
+                            <ProgressCircle size="125" progress={totalProfitToday/(totalProfitToday + totalSpent)} showPercentage={true} />
                             <Typography variant="h5" mt={2}>
-                                X dollars left
+                                {(userGoalPrice - (totalProfitToday + totalSpent)).toFixed(2)} USD left
                             </Typography>
                         </Box>
                     </Box>
@@ -357,7 +419,7 @@ const FinancesPage = () => {
                     >
                         <Box>
                             <Typography variant="h5" fontWeight="600" color={colors.grey[100]}>
-                                Bar Chart (average profit last year)
+                                Average Profit Chart
                             </Typography>
                         </Box>
                     </Box>

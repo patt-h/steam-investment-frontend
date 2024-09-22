@@ -2,7 +2,7 @@ export const fetchHistoryData = async (itemId) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/history/all/${itemId}`;
+        const url = `http://localhost:8080/history/all/id/${itemId}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -26,7 +26,7 @@ export const fetchHistoryDataByName = async (name) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/history/all?name=${encodeURIComponent(name)}`;
+        const url = `http://localhost:8080/history/all/name/${encodeURIComponent(name)}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -69,4 +69,22 @@ export const fetchHistoryTodayData = async (itemIds) => {
         console.error('Error fetching history data for today:', error);
         return [];
     }
+};
+
+export const fetchCurrentPrice = async (name) => {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`http://localhost:8080/history/current/${name}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch current price');
+    }
+
+    return response.json();
 };
