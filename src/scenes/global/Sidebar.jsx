@@ -10,6 +10,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import InfoIconOutlined from '@mui/icons-material/InfoOutlined';
+import ApiIcon from '@mui/icons-material/Api';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -131,6 +132,13 @@ const Sidebar = () => {
               title="Steam Market"
               to="https://steamcommunity.com/market/"
               icon={<HelpOutlineOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="API"
+              to="http://localhost:8080/swagger-ui/index.html#/"
+              icon={<ApiIcon />}
               selected={selected}
               setSelected={setSelected}
             />
