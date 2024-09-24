@@ -45,7 +45,6 @@ const FinancesPage = () => {
         const fetchItemPrice = async (goalName) => {
             try {
                 const response = await fetchCurrentPrice(goalName);
-                console.log("Fetching from Steam")
                 
                 if (response && response.price) {
                     return response.price;
@@ -85,9 +84,9 @@ const FinancesPage = () => {
                 if (storedPrice) {
                     setUserGoalPrice(storedPrice);
                 } else {
-                    const userGoalPrice = await fetchItemPrice(userGoal);
+                    const userGoalPrice = await fetchItemPrice(data.goalName);
                     if (userGoalPrice) {
-                        updateUserGoalPrice(userGoalPrice, userGoal);
+                        updateUserGoalPrice(userGoalPrice, data.goalName);
                     }
                 }
             } catch (error) {
