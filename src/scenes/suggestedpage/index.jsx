@@ -15,7 +15,7 @@ const SuggestedPage = () => {
         const getRecommendations = async () => {
             try {
                 const data = await fetchUserRecommendations();
-                setRecommendations(data); // Zakładam, że data to tablica rekomendacji
+                setRecommendations(data);
             } catch (error) {
                 console.error("Failed to fetch recommendations:", error);
             }
@@ -64,9 +64,9 @@ const SuggestedPage = () => {
                             <img
                                 src={`https://api.steamapis.com/image/item/730/${item.marketHashName}`}
                                 style={{
-                                    maxWidth: '100%', // Maksymalna szerokość na 100% kontenera
-                                    maxHeight: '100%', // Maksymalna wysokość na 100% kontenera
-                                    objectFit: 'contain' // Zachowuje proporcje obrazka
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    objectFit: 'contain'
                                 }}
                             />
                         </Box>

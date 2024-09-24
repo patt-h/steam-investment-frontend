@@ -59,23 +59,22 @@ const Sidebar = () => {
     >
       <ProSidebar>
         <Menu iconShape="square">
-          {/* LOGO AND MENU ICON */}
           <MenuItem
             style={{
               margin: "10px 0 20px 0",
               color: colors.grey[100],
             }}
           >
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  MENU
-                </Typography>
-              </Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              ml="15px"
+            >
+              <Typography variant="h3" color={colors.grey[100]}>
+                MENU
+              </Typography>
+            </Box>
           </MenuItem>
           <Box paddingLeft="10%">
             <Typography
