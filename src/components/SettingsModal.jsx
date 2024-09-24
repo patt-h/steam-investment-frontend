@@ -50,6 +50,9 @@ const SettingsModal = ({ open, handleClose }) => {
         try {
             await updateUserSettings(updatedSettings);
             setSnackbarOpen(true);
+            setTimeout(() => {
+                window.location.reload();
+            }, 4000);
         } catch (error) {
             console.error('Error updating settings:', error);
         }
@@ -202,7 +205,6 @@ const SettingsModal = ({ open, handleClose }) => {
                     </List>
                 </Box>
 
-                {/* Content Area */}
                 <Box sx={{ width: '70%', pl: 2 }}>
                     {selectedSection === 'General' ? renderGeneralSettings() : selectedSection === 'Password' ? renderPasswordSettings() : renderEmailSettings()}
                 </Box>
@@ -210,9 +212,9 @@ const SettingsModal = ({ open, handleClose }) => {
                 <Snackbar 
                     open={snackbarOpen}
                     anchorOrigin={{horizontal: 'center', vertical: 'top'}}
-                    autoHideDuration={2000} 
+                    autoHideDuration={3000} 
                     onClose={() => setSnackbarOpen(false)}
-                    message="Settings have been successfully updated!" 
+                    message="Settings have been successfully updated! Page will refresh in a second" 
                 />
             </Box>
         </Modal>

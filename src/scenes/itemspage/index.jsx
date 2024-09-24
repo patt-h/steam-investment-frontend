@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchItemsData, addItemEntry, updateItemEntry, deleteItemEntries } from '../../components/ItemApi';
 import { fetchHistoryData, fetchHistoryTodayData } from '../../components/HistoryApi';
+import { fetchUserSettings } from '../../components/SettingsApi';
 import AutoCompleteInput from '../../components/AutoCompleteInput';
 import { Box, Typography, useTheme, Button, Modal, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, FormControl, InputLabel, MenuItem, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -20,7 +21,7 @@ const ItemsPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
-    const [selectedCurrency, setSelectedCurrency] = useState("USD");
+    const [selectedCurrency, setSelectedCurrency] = useState();
 
     const [openModal, setOpenModal] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
@@ -30,9 +31,7 @@ const ItemsPage = () => {
     const handleCloseModal = () => setOpenModal(false);
     const handleCloseDialog = () => setOpenDialog(false);
 
-    const [rows, setRows] = useState([
-        { marketHashName: "", price: 0, currency: "USD", quantity: 1 },
-    ]);
+    const [rows, setRows] = useState([]);
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
@@ -234,7 +233,12 @@ const ItemsPage = () => {
         const fetchData = async () => {
             try {
                 const data = await fetchItemsData();
+                const userSettings = await fetchUserSettings();
+
                 setItemData(data);
+                setSelectedCurrency(userSettings.currency);
+                setRows([{ marketHashName: "", price: 0, currency: userSettings.currency, quantity: 1 }])
+                console.log(userSettings.currency);
             } catch (err) {
                 setError('Failed to fetch items data');
             }
