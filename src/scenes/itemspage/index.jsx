@@ -392,6 +392,9 @@ const ItemsPage = () => {
                     border: "none",
                     fontSize: "16px"
                 },
+                "& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-cell:focus": {
+                    outline: "none !important",
+                },
                 "& .MuiDataGrid-cell": {
                     borderBottom: "none",
                 },
@@ -399,19 +402,30 @@ const ItemsPage = () => {
                     borderBottom: "none",
                 },
                 "& .MuiDataGrid-virtualScroller": {
-                    backgroundColor: colors.primary[400]
+                    backgroundColor: colors.primary[400],
                 },
                 "& .MuiDataGrid-footerContainer": {
                     borderTop: "none",
                 },
                 "& .MuiCheckbox-root": {
                     color: `${colors.greenAccent[100]} !important`
-                }
+                },
+                "& ::-webkit-scrollbar-track": {
+                    backgroundColor: theme.palette.mode === "dark" ? colors.primary[600] : colors.grey[800],
+                },
+                "& ::-webkit-scrollbar-thumb": {
+                    backgroundColor: colors.grey[700],
+                    borderRadius: '10px',
+                },
+                "& ::-webkit-scrollbar-thumb:hover": {
+                    backgroundColor: colors.grey[600],
+                },
             }}>
                 <DataGrid
                     rows={itemData}
                     columns={columns}
                     checkboxSelection
+                    disableRowSelectionOnClick
                     onRowSelectionModelChange={(itm) => setSelectedRows(itm)}
                     processRowUpdate={processRowUpdate}
                     experimentalFeatures={{ newEditingApi: true }}

@@ -322,7 +322,7 @@ const FinancesPage = () => {
                           width: '8px',
                         },
                         '&::-webkit-scrollbar-track': {
-                          backgroundColor: colors.primary[500],
+                          backgroundColor: theme.palette.mode === "dark" ? colors.primary[500] : '#fcfcfc',
                         },
                         '&::-webkit-scrollbar-thumb': {
                           backgroundColor: colors.grey[700],
