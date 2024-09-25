@@ -317,7 +317,22 @@ const FinancesPage = () => {
                     gridRow="span 2"
                     backgroundColor={colors.primary[400]}
                     overflow="auto"
-                >
+                    sx={{
+                        '&::-webkit-scrollbar': {
+                          width: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          backgroundColor: colors.primary[500],
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          backgroundColor: colors.grey[700],
+                          borderRadius: '10px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                          backgroundColor: colors.grey[500],
+                        },
+                      }}
+                    >
                     <Box
                         display="flex"
                         justifyContent="space-between"

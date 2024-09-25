@@ -65,6 +65,7 @@ const PriceHistory = () => {
                     <Box
                         key={item.id}
                         onClick={() => handleItemClick(item)}
+                        backgroundColor={colors.primary[400]}
                         sx={{
                             border: '1px solid #ccc',
                             padding: '8px',

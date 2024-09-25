@@ -47,6 +47,7 @@ const SuggestedPage = () => {
                 {recommendations.map((item) => (
                     <Box
                         key={item.id}
+                        backgroundColor={colors.primary[400]}
                         sx={{
                             border: '1px solid #ccc',
                             padding: '8px',
@@ -84,13 +85,13 @@ const SuggestedPage = () => {
                                 mb: 1
                             }}
                         >
-                            <Button variant="outlined" color="secondary" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`http://localhost:3000/history/${item.marketHashName}`, '_blank')}>
+                            <Button variant="outlined" color="neutral" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`http://localhost:3000/history/${item.marketHashName}`, '_blank')}>
                                 <HistoryIcon sx={{
                                     width: '20px', marginRight: '5px', color: colors.grey[100]
                                 }}/>
                                 Check price history
                             </Button>
-                            <Button variant="outlined" color="secondary" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`https://steamcommunity.com/market/listings/730/${item.marketHashName}`, '_blank')}>
+                            <Button variant="outlined" color="neutral" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`https://steamcommunity.com/market/listings/730/${item.marketHashName}`, '_blank')}>
                                 <img 
                                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2048px-Steam_icon_logo.svg.png" 
                                     alt="Steam" 

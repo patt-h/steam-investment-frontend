@@ -13,6 +13,9 @@ import InfoIconOutlined from '@mui/icons-material/InfoOutlined';
 import ApiIcon from '@mui/icons-material/Api';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
+import { faSteam } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -130,7 +133,7 @@ const Sidebar = () => {
             <Item
               title="Steam Market"
               to="https://steamcommunity.com/market/"
-              icon={<HelpOutlineOutlinedIcon />}
+              icon={<FontAwesomeIcon icon={faSteam} size={'lg'}/>}
               selected={selected}
               setSelected={setSelected}
             />
