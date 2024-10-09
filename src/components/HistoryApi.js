@@ -74,7 +74,7 @@ export const fetchHistoryTodayData = async (itemIds) => {
 export const fetchCurrentPrice = async (name) => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`http://localhost:8080/history/current/${name}`, {
+    const response = await fetch(`http://localhost:8080/history/current/${encodeURIComponent(name)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
