@@ -31,51 +31,51 @@ const MainPage = () => {
 
     return (
         <>
-            <body class="specific-page">
-            <div className="canvas-container">
-                <canvas id="backgroundCanvas"></canvas>
-            </div>
-            <div className="container">
-                <div className="welcome-message">
-                    <h1>Steam Investment Helper</h1>
-                    <p>Track all of your investments with current price, profit and price history</p>
-                    <p>Log in or sign up for free!</p>
+            <main className="specific-page">
+                <div className="canvas-container">
+                    <canvas id="backgroundCanvas"></canvas>
                 </div>
+                <div className="container">
+                    <div className="welcome-message">
+                        <h1>Steam Investment Helper</h1>
+                        <p>Track all of your investments with current price, profit and price history</p>
+                        <p>Log in or sign up for free!</p>
+                    </div>
 
-                <div className='wrapper'>
-                    <form onSubmit={handleLogin}>
-                        <h1>{isRegister ? 'Register' : 'Login'}</h1>
-                        {isRegister && (
+                    <div className='wrapper'>
+                        <form onSubmit={handleLogin}>
+                            <h1>{isRegister ? 'Register' : 'Login'}</h1>
+                            {isRegister && (
+                                <div className="input-box">
+                                    <input type="email" placeholder="Email" required />
+                                    <FaEnvelope className='icon' />
+                                </div>
+                            )}
                             <div className="input-box">
-                                <input type="email" placeholder="Email" required />
-                                <FaEnvelope className='icon' />
+                                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                                <FaUser className='icon' />
                             </div>
-                        )}
-                        <div className="input-box">
-                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                            <FaUser className='icon' />
-                        </div>
-                        <div className="input-box">
-                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                            <FaLock className='icon' />
-                        </div>
-
-                        {!isRegister && (
-                            <div className="remember-forgot">
-                                <label><input type="checkbox" />Remember me</label>
-                                <a href="#">Forgot password?</a>
+                            <div className="input-box">
+                                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                                <FaLock className='icon' />
                             </div>
-                        )}
 
-                        <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
+                            {!isRegister && (
+                                <div className="remember-forgot">
+                                    <label><input type="checkbox" />Remember me</label>
+                                    <a href="#">Forgot password?</a>
+                                </div>
+                            )}
 
-                        <div className="register-link">
-                            <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={(e) => { e.preventDefault(); setIsRegister(!isRegister); }}>{isRegister ? 'Login' : 'Register'}</a></p>
-                        </div>
-                    </form>
+                            <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
+
+                            <div className="register-link">
+                                <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={(e) => { e.preventDefault(); setIsRegister(!isRegister); }}>{isRegister ? 'Login' : 'Register'}</a></p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            </body>
+            </main>
         </>
     );
 

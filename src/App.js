@@ -18,6 +18,8 @@ import FinancesPage from "./scenes/financespage";
 import SuggestedPage from "./scenes/suggestedpage";
 import FAQ from "./scenes/faq";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 const App = () => {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
@@ -35,12 +37,12 @@ const App = () => {
             {!hideSidebarAndTopbar && <Topbar setIsSidebar={setIsSidebar} />}
             <Routes>
               <Route path="/" element={<MainPage />} />
-              <Route path="/home" element={<ItemsPage />} />
-              <Route path="/history" element={<PriceHistory />} />
-              <Route path="/history/:marketHashName"  element={<ItemHistoryPage />} />
-              <Route path="/finances" element={<FinancesPage />} />
-              <Route path="/suggested" element={<SuggestedPage />} />
-              <Route path="/faq" element={<FAQ />} />
+              <Route path="/home" element={<ProtectedRoute element={ItemsPage} />} />
+              <Route path="/history" element={<ProtectedRoute element={PriceHistory} />} />
+              <Route path="/history/:marketHashName" element={<ProtectedRoute element={ItemHistoryPage} />} />
+              <Route path="/finances" element={<ProtectedRoute element={FinancesPage} /> } />
+              <Route path="/suggested" element={<ProtectedRoute element={SuggestedPage} />} />
+              <Route path="/faq" element={<ProtectedRoute element={FAQ} />} />
             </Routes>
           </main>
         </div>
