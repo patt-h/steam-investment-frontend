@@ -14,7 +14,7 @@ main.specific-page {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #303030;
+    background: linear-gradient(135deg, #303030, #202020, #101010);
     background-size: cover;
     background-position: center;
 }
@@ -33,8 +33,8 @@ main.specific-page {
     padding: 20px;
     color: white;
     line-height: 1.5;
-    margin-left: -200px;
-    margin-top: -200px;
+    margin-left: -300px;
+    margin-top: -500px;
 }
 
 .welcome-message h1 {
@@ -55,8 +55,7 @@ main.specific-page {
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
-    margin-right: 80px;
-    margin-top: -30px;
+    margin-top: -40px;
 }
 
 .wrapper h1 {
@@ -143,4 +142,34 @@ main.specific-page {
 
 .register-link p a:hover {
     text-decoration: underline;
+}
+
+.container-slider {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 700px) {
+    .container-slider {
+      margin: 100px 10px 0;
+    }
+}
+
+.slide {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    opacity: 0;
+    transition: opacity ease-in-out 0.5s;
+}
+
+.slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+}
+
+.active-anim {
+    opacity: 1;
 }

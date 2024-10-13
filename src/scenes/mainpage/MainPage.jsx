@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './mainpage.css';
 
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { login } from '../../components/TokenApi';
+
+import image1 from '../../assets/image1.png';
+import image2 from '../../assets/image2.png';
+import image3 from '../../assets/image3.png';
+import image4 from '../../assets/image4.png';
 
 const MainPage = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -12,6 +17,30 @@ const MainPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+
+    const images = [{id: 1, src: image1}, {id: 2, src: image2}, {id: 3, src: image3}, {id: 4, src: image4}]
+
+    const [slideIndex, setSlideIndex] = useState(1);
+
+    const nextSlide = () => {
+        if (slideIndex !== images.length) {
+          setSlideIndex(slideIndex + 1);
+        } else if (slideIndex === images.length) {
+          setSlideIndex(1);
+        }
+    };
+
+    const moveDot = (index) => {
+        setSlideIndex(index);
+    };
+    
+    useEffect(()=>{
+        const interval = setInterval(()=>{
+            nextSlide();        
+        }, 4000);
+        return () => clearInterval(interval);
+    });
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -39,7 +68,18 @@ const MainPage = () => {
                     <div className="welcome-message">
                         <h1>Steam Investment Helper</h1>
                         <p>Track all of your investments with current price, profit and price history</p>
-                        <p>Log in or sign up for free!</p>
+                        <p><b>Log in or sign up for free!</b></p>
+
+                        <div className="container-slider">
+                            {images.map((image, index) => (
+                                <div 
+                                    key={image.id}
+                                    className={slideIndex === index + 1 ? "slide active-anim" : "slide"}
+                                >
+                                    <img src={image.src} alt={image.id} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <div className='wrapper'>
