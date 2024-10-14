@@ -6,7 +6,8 @@ export const login = async (credentials) => {
         },
         body: JSON.stringify({
             username: credentials.username,
-            password: credentials.password
+            password: credentials.password,
+            rememberMe: credentials.rememberMe
         }),
     });
 

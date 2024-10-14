@@ -15,6 +15,7 @@ const MainPage = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -30,10 +31,6 @@ const MainPage = () => {
           setSlideIndex(1);
         }
     };
-
-    const moveDot = (index) => {
-        setSlideIndex(index);
-    };
     
     useEffect(()=>{
         const interval = setInterval(()=>{
@@ -46,7 +43,7 @@ const MainPage = () => {
         e.preventDefault();
 
         try {
-            const data = await login({ username, password });
+            const data = await login({ username, password, rememberMe });
             if (data.token) {
                 localStorage.setItem('token', data.token);
                 navigate('/home');
@@ -102,7 +99,7 @@ const MainPage = () => {
 
                             {!isRegister && (
                                 <div className="remember-forgot">
-                                    <label><input type="checkbox" />Remember me</label>
+                                    <label><input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />Remember me</label>
                                     <a href="#">Forgot password?</a>
                                 </div>
                             )}
