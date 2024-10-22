@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import './mainpage.css';
 
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { login } from '../../components/TokenApi';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { login, register } from '../../components/TokenApi';
 
 import image1 from '../../assets/image1.png';
 import image2 from '../../assets/image2.png';
@@ -17,6 +19,9 @@ const MainPage = () => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
+    const [email, setEmail] = useState('');
+    const [registerSuccess, setRegisterSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
 
@@ -55,6 +60,24 @@ const MainPage = () => {
         }
     };
 
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const data = await register({ username, password, email });
+            if (data.ok) {
+                setRegisterSuccess(true);
+            } else {
+                setError('An error occurred. Please try again.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <main className="specific-page">
@@ -80,11 +103,23 @@ const MainPage = () => {
                     </div>
 
                     <div className='wrapper'>
-                        <form onSubmit={handleLogin}>
+                        {isLoading && (
+                            <div className="loading-overlay">
+                                <CircularProgress style={{ color: '#888' }} />
+                            </div>
+                        )}
+                        {registerSuccess ? (
+                            <div className="success-message">
+                                <CheckCircleIcon style={{ color: "#22bb33", fontSize: '60' }}/>
+                                <h2>Registration success!</h2>
+                                <p>You have been successfully registered. To activate  your account check your email and confirm your registration!</p>
+                            </div>
+                        ) : (
+                        <form onSubmit={isRegister ? handleRegister : handleLogin}>
                             <h1>{isRegister ? 'Register' : 'Login'}</h1>
                             {isRegister && (
                                 <div className="input-box">
-                                    <input type="email" placeholder="Email" required />
+                                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                     <FaEnvelope className='icon' />
                                 </div>
                             )}
@@ -110,6 +145,7 @@ const MainPage = () => {
                                 <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={(e) => { e.preventDefault(); setIsRegister(!isRegister); }}>{isRegister ? 'Login' : 'Register'}</a></p>
                             </div>
                         </form>
+                        )}
                     </div>
                 </div>
             </main>

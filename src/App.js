@@ -11,6 +11,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import MainPage from "./scenes/mainpage/MainPage";
+import ConfirmAccount from "./scenes/confirmpage";
 import ItemsPage from "./scenes/itemspage";
 import PriceHistory from "./scenes/pricehistory";
 import ItemHistoryPage from "./scenes/chartpage";
@@ -25,7 +26,7 @@ const App = () => {
   const [isSidebar, setIsSidebar] = useState(true);
   const location = useLocation();
 
-  const hideSidebarAndTopbar = location.pathname === '/';
+  const hideSidebarAndTopbar = location.pathname === '/' || location.pathname === '/confirm-account';;
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -37,6 +38,7 @@ const App = () => {
             {!hideSidebarAndTopbar && <Topbar setIsSidebar={setIsSidebar} />}
             <Routes>
               <Route path="/" element={<MainPage />} />
+              <Route path="/confirm-account" element={<ConfirmAccount />} />
               <Route path="/home" element={<ProtectedRoute element={ItemsPage} />} />
               <Route path="/history" element={<ProtectedRoute element={PriceHistory} />} />
               <Route path="/history/:marketHashName" element={<ProtectedRoute element={ItemHistoryPage} />} />
