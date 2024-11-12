@@ -263,9 +263,27 @@ const ItemsPage = () => {
                     }, {});
 
                     setHistoryData(historyMap);
+
+                    await fetchAllHistoryTodayData();
+
                 } catch (err) {
                     setError('Failed to fetch history data');
                 }
+            }
+        };
+
+        const fetchAllHistoryTodayData = async () => {
+            if (itemData.length > 0) {
+                const itemIds = itemData.map(item => item.itemId);
+                const results = await fetchHistoryTodayData(itemIds);
+
+                const historyTodayMap = results.reduce((acc, entry) => {
+                    if (!acc[entry.itemId]) acc[entry.itemId] = [];
+                    acc[entry.itemId].push(entry);
+                    return acc;
+                }, {});
+
+                setHistoryTodayData(historyTodayMap);
             }
         };
         
