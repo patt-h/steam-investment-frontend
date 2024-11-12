@@ -35,7 +35,7 @@ const PriceHistory = () => {
 
     return (
         <Box m="20px">
-            <Header title="PRICE HISTORY" subtitle="Check price line chart of item" />
+            <Header title="PRICE HISTORY" subtitle="Check the price history of any item" />
             
             <Box mt="20px">
                 <Typography variant="h4">

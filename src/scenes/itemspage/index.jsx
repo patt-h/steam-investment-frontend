@@ -238,7 +238,6 @@ const ItemsPage = () => {
                 setItemData(data);
                 setSelectedCurrency(userSettings.currency);
                 setRows([{ marketHashName: "", price: 0, currency: userSettings.currency, quantity: 1 }])
-                console.log(userSettings.currency);
             } catch (err) {
                 setError('Failed to fetch items data');
             }
@@ -375,6 +374,15 @@ const ItemsPage = () => {
         return percentageChange.toFixed(2);
     };
 
+    const CustomNoRowsOverlay = () => (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+            <Typography variant="h4" color="textSecondary">
+                You haven't added any items yet. Click the green <b>ADD NEW</b> button to add items and start tracking prices!
+            </Typography>
+          </Box>
+    );
+
+
     return (
         <Box m="20px">
             <Header title="INVESTMENTS" subtitle="List of all your investments" />
@@ -440,6 +448,15 @@ const ItemsPage = () => {
                 },
             }}>
                 <DataGrid
+                    loading={Object.keys(historyTodayData).length === 0 && Object.keys(itemData).length !== 0}
+                    slots={{
+                        noRowsOverlay: CustomNoRowsOverlay
+                    }}
+                    slotProps={{
+                        loadingOverlay: {
+                            variant: 'skeleton',
+                        },
+                    }}
                     rows={itemData}
                     columns={columns}
                     checkboxSelection
@@ -533,15 +550,15 @@ const ItemsPage = () => {
                         marginTop: "15px" 
                     }}>
                         <Button variant="contained" color="primary" onClick={handleCloseModal} sx={{
-                            backgroundColor: colors.redAccent[700],
+                            backgroundColor: colors.redAccent[600],
                             '&:hover': {
-                                backgroundColor: colors.redAccent[600],
+                                backgroundColor: colors.redAccent[500],
                             }
                         }}>
                             Cancel
                         </Button>
                         <Button variant="contained" color="primary" onClick={handleAddItems} sx={{
-                            backgroundColor: colors.greenAccent[700],
+                            backgroundColor: colors.greenAccent[600],
                             marginLeft: "10px",
                             '&:hover': {
                                 backgroundColor: colors.greenAccent[500],
@@ -560,18 +577,18 @@ const ItemsPage = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary" sx={{
-                        backgroundColor: colors.primary[200],
+                    <Button onClick={handleCloseDialog} color="primary" variant="contained" sx={{
+                        backgroundColor: colors.blueAccent[400],
                         '&:hover': {
-                            backgroundColor: colors.primary[300],
+                            backgroundColor: colors.blueAccent[300],
                         }
                     }}>
                         Cancel
                     </Button>
-                    <Button onClick={confirmDelete} color="primary" sx={{
-                        backgroundColor: colors.redAccent[500],
+                    <Button onClick={confirmDelete} color="primary" variant="contained" sx={{
+                        backgroundColor: colors.redAccent[600],
                         '&:hover': {
-                            backgroundColor: colors.redAccent[400],
+                            backgroundColor: colors.redAccent[500],
                         }
                     }}>
                         Confirm
