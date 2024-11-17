@@ -1,7 +1,7 @@
 export const fetchItemsData = async () => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8080/item/all', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/item/all', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchItemsData = async () => {
 export const addItemEntry = async (entry) => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8080/item/add', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/item/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export const addItemEntry = async (entry) => {
 export const updateItemEntry = async (entry) => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`http://localhost:8080/item/update`, {
+    const response = await fetch(`https://steam-investment-helper-backend.azurewebsites.net/item/update`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const updateItemEntry = async (entry) => {
 export const deleteItemEntries = async (ids) => {
     const token = localStorage.getItem('token');
 
-    const url = `http://localhost:8080/item/delete/${ids.join(',')}`;
+    const url = `https://steam-investment-helper-backend.azurewebsites.net/item/delete/${ids.join(',')}`;
 
     const response = await fetch(url, {
         method: 'DELETE',

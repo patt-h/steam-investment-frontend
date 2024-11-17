@@ -1,5 +1,5 @@
 export const login = async (credentials) => {
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const login = async (credentials) => {
 };
 
 export const verifyToken = async (token) => {
-    const response = await fetch('http://localhost:8080/verify', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/verify', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const verifyToken = async (token) => {
 };
 
 export const register = async (userData) => {
-    const response = await fetch('http://localhost:8080/register', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const register = async (userData) => {
 };
 
 export const confirmAccount = async (token) => {
-    const response = await fetch(`http://localhost:8080/confirm-account?token=${token}`, {
+    const response = await fetch(`https://steam-investment-helper-backend.azurewebsites.net/confirm-account?token=${token}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export const confirmAccount = async (token) => {
 };
 
 export const resendToken = async (token) => {
-    const response = await fetch(`http://localhost:8080/resend-token?token=${token}`, {
+    const response = await fetch(`https://steam-investment-helper-backend.azurewebsites.net/resend-token?token=${token}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

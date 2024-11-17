@@ -1,7 +1,7 @@
 export const fetchUserSettings = async () => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8080/settings/all', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/settings/all', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const fetchUserSettings = async () => {
 export const updateUserSettings = async (entry) => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`http://localhost:8080/settings/update`, {
+    const response = await fetch(`https://steam-investment-helper-backend.azurewebsites.net/settings/update`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ export const fetchHistoryData = async (itemId) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/history/all/id/${itemId}`;
+        const url = `https://steam-investment-helper-backend.azurewebsites.net/history/all/id/${itemId}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -26,7 +26,7 @@ export const fetchHistoryDataByName = async (name) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/history/all/name/${encodeURIComponent(name)}`;
+        const url = `https://steam-investment-helper-backend.azurewebsites.net/history/all/name/${encodeURIComponent(name)}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -51,7 +51,7 @@ export const fetchHistoryTodayData = async (itemIds) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/history/today/${itemIds.join(',')}`;
+        const url = `https://steam-investment-helper-backend.azurewebsites.net/history/today/${itemIds.join(',')}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -74,7 +74,7 @@ export const fetchHistoryTodayData = async (itemIds) => {
 export const fetchCurrentPrice = async (name) => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`http://localhost:8080/history/current/${encodeURIComponent(name)}`, {
+    const response = await fetch(`https://steam-investment-helper-backend.azurewebsites.net/history/current/${encodeURIComponent(name)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

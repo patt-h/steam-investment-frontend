@@ -2,7 +2,7 @@ export const fetchItems = async (query) => {
     const token = localStorage.getItem('token');
 
     try {
-        const url = `http://localhost:8080/items/search?prefix=${encodeURIComponent(query)}`;
+        const url = `https://steam-investment-helper-backend.azurewebsites.net/items/search?prefix=${encodeURIComponent(query)}`;
 
         const response = await fetch(url, {
             method: 'GET',

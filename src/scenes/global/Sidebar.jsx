@@ -139,7 +139,7 @@ const Sidebar = () => {
             />
             <Item
               title="API"
-              to="http://localhost:8080/swagger-ui/index.html#/"
+              to="https://steam-investment-helper-backend.azurewebsites.net/swagger-ui/index.html#/"
               icon={<ApiIcon />}
               selected={selected}
               setSelected={setSelected}

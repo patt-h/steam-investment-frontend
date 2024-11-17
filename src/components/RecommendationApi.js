@@ -1,7 +1,7 @@
 export const fetchUserRecommendations = async () => {
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8080/recommendations/get', {
+    const response = await fetch('https://steam-investment-helper-backend.azurewebsites.net/recommendations/get', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
