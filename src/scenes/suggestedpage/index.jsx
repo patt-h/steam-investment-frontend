@@ -85,7 +85,7 @@ const SuggestedPage = () => {
                                 mb: 1
                             }}
                         >
-                            <Button variant="outlined" color="neutral" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`http://localhost:3000/history/${item.marketHashName}`, '_blank')}>
+                            <Button variant="outlined" color="neutral" sx={{ width: '70%', mt: 1 }} onClick={() => window.open(`https://orange-ground-01de4be03.5.azurestaticapps.net/history/${item.marketHashName}`, '_blank')}>
                                 <HistoryIcon sx={{
                                     width: '20px', marginRight: '5px', color: colors.grey[100]
                                 }}/>
