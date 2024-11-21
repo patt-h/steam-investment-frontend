@@ -19,6 +19,7 @@ const MainPage = () => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
+    const [isError, setIsError] = useState({ username: false, password: false });
     const [email, setEmail] = useState('');
     const [registerSuccess, setRegisterSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -46,17 +47,28 @@ const MainPage = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         try {
             const data = await login({ username, password, rememberMe });
             if (data.token) {
                 localStorage.setItem('token', data.token);
                 navigate('/home');
-            } else {
-                setError('Invalid credentials');
             }
         } catch (err) {
-            setError('An error occurred. Please try again.');
+            console.log(err)
+            if (err.status === 404) {
+                setError('User not found');
+                setIsError({ username: true, password: true });
+            } else if (err.status === 400) {
+                setError('Incorrect password');
+                setIsError({ username: false, password: true });
+            } else {
+                setError('An error occurred. Please try again.');
+                setIsError({ username: true, password: true });
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -117,18 +129,19 @@ const MainPage = () => {
                         ) : (
                         <form onSubmit={isRegister ? handleRegister : handleLogin}>
                             <h1>{isRegister ? 'Register' : 'Login'}</h1>
+                            {error && <div className="error-message">{error}</div>}
                             {isRegister && (
                                 <div className="input-box">
                                     <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                     <FaEnvelope className='icon' />
                                 </div>
                             )}
-                            <div className="input-box">
-                                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                            <div className={`input-box ${isError.username ? 'input-error' : ''}`}>
+                                <input type="text" placeholder="Username" value={username} onChange={(e) => { setUsername(e.target.value); setIsError({ ...isError, username: false }); }} className={isError.username ? 'input-error' : ''} required />
                                 <FaUser className='icon' />
                             </div>
-                            <div className="input-box">
-                                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            <div className={`input-box ${isError.password ? 'input-error' : ''}`}>
+                                <input type="password" placeholder="Password" value={password} onChange={(e) => { setPassword(e.target.value); setIsError({ ...isError, password: false }); }} required />
                                 <FaLock className='icon' />
                             </div>
 
@@ -142,7 +155,7 @@ const MainPage = () => {
                             <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
 
                             <div className="register-link">
-                                <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={(e) => { e.preventDefault(); setIsRegister(!isRegister); }}>{isRegister ? 'Login' : 'Register'}</a></p>
+                                <p>{isRegister ? 'Already have an account?' : "Don't have an account?"} <a href="#" onClick={(e) => { e.preventDefault(); setIsError({ ...isError, username: false, password: false }); setError(''); setIsRegister(!isRegister); }}>{isRegister ? 'Login' : 'Register'}</a></p>
                             </div>
                         </form>
                         )}

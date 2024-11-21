@@ -12,7 +12,11 @@ export const login = async (credentials) => {
     });
 
     if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json();
+        throw { 
+            status: response.status,
+            message: errorData?.error || 'Login failed',
+        };
     }
 
     return response.json();

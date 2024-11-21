@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
+import { CircularProgress } from '@mui/material';
 
 const BarChart = ({ data: propData }) => {
     const theme = useTheme();
@@ -9,7 +10,7 @@ const BarChart = ({ data: propData }) => {
     const [data, setData] = useState([]);
 
     if (!propData || propData.length === 0) {
-        return <div>Brak danych do wyświetlenia</div>;
+        return;
     }
 
     const processProfitData = (profitData) => {
@@ -22,9 +23,9 @@ const BarChart = ({ data: propData }) => {
             const dateObj = new Date(entry.x);
             if (dateObj >= lastYear) {
                 const monthIndex = dateObj.getMonth();
-                const year = dateObj.getFullYear(); // Pobierz rok
+                const year = dateObj.getFullYear();
                 const monthName = new Date(0, monthIndex).toLocaleString('en-US', { month: 'short' });
-                const monthYearKey = `${monthName} ${year}`; // Klucz z nazwą miesiąca i rokiem
+                const monthYearKey = `${monthName} ${year}`;
                 if (!monthMap[monthYearKey]) {
                     monthMap[monthYearKey] = [];
                 }
@@ -35,13 +36,13 @@ const BarChart = ({ data: propData }) => {
         const averageData = Object.keys(monthMap).map(monthYear => {
             const total = monthMap[monthYear].reduce((acc, value) => acc + value, 0);
             const average = total / monthMap[monthYear].length;
-            return { x: monthYear, y: average.toFixed(2) }; // Miesiąc z rokiem i średnia
+            return { x: monthYear, y: average.toFixed(2) };
         });
     
         return averageData;
     };
 
-    const averageData = processProfitData(propData[0].data); // Zakładając, że przekazujesz tablicę z jednym obiektem
+    const averageData = processProfitData(propData[0].data);
 
     return (
         <ResponsiveBar
